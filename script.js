@@ -75,6 +75,12 @@ contactForm.addEventListener('submit', function(e) {
         nextInput.value = redirectUrl;
     }
     
+    // Set reply-to email for Formspree
+    const replyToInput = this.querySelector('input[name="_replyto"]');
+    if (replyToInput) {
+        replyToInput.value = email;
+    }
+    
     // Show loading notification
     showNotification('Invio in corso...', 'info');
     
@@ -85,8 +91,8 @@ contactForm.addEventListener('submit', function(e) {
         submitBtn.textContent = 'Invio...';
     }
     
-    // Form will submit normally to FormSubmit
-    // If there's an error, FormSubmit will handle it
+    // Form will submit normally to Formspree
+    // If there's an error, Formspree will handle it
     // If successful, user will be redirected to the success URL
 });
 

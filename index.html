@@ -640,12 +640,14 @@
                     </div>
                 </div>
                 <div class="contact-form">
-                    <form id="contactForm" action="https://formsubmit.co/laurabrill@live.it" method="POST">
-                        <!-- FormSubmit configuration -->
+                    <!-- Formspree form -->
+                    <form id="contactForm" action="https://formspree.io/f/xkglloej" method="POST">
+                        <!-- Formspree configuration -->
                         <input type="hidden" name="_subject" value="Nuova richiesta dal sito web - Studio Legale Brillante">
-                        <input type="hidden" name="_captcha" value="false">
-                        <input type="hidden" name="_next" value="">
-                        <input type="hidden" name="_template" value="table">
+                        <input type="hidden" name="_replyto" id="replyto" value="">
+                        <input type="hidden" name="_next" id="formNextUrl" value="">
+                        <input type="hidden" name="_cc" value="laurabrill@live.it">
+                        <!-- Autoresponse configuration -->
                         <input type="hidden" name="_autoresponse" value="Grazie per averci contattato. Abbiamo ricevuto la tua richiesta e ti risponderemo al più presto. Studio Legale Laura Brillante">
                         
                         <div class="form-group">
