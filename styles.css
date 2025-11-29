@@ -633,6 +633,11 @@ p {
     gap: var(--spacing-lg);
 }
 
+/* Make "Diritto dell'Immigrazione" card span the entire row */
+.service-card:nth-child(7) {
+    grid-column: 1 / -1;
+}
+
 .service-card {
     background-color: var(--bg-cards);
     padding: var(--spacing-lg);
