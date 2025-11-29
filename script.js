@@ -122,12 +122,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } else {
             // Error from Formspree
-            const data = await response.json();
-            if (data.errors) {
-                showNotification('Si è verificato un errore. Per favore, riprova più tardi.', 'error');
-            } else {
-                showNotification('Errore nell\'invio del messaggio. Per favore, riprova.', 'error');
+            let errorMessage = 'Errore nell\'invio del messaggio. Per favore, riprova.';
+            try {
+                const data = await response.json();
+                console.error('Formspree error:', data);
+                if (data.error) {
+                    errorMessage = `Errore: ${data.error}`;
+                } else if (data.errors) {
+                    errorMessage = `Errore: ${JSON.stringify(data.errors)}`;
+                }
+            } catch (e) {
+                console.error('Error parsing response:', e);
             }
+            showNotification(errorMessage, 'error');
             
             // Re-enable submit button
             if (submitBtn) {
