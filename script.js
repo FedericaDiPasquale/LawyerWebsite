@@ -44,8 +44,6 @@ window.addEventListener('scroll', () => {
 const contactForm = document.getElementById('contactForm');
 
 contactForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
     // Get form data
     const formData = new FormData(this);
     const name = formData.get('name');
@@ -56,6 +54,7 @@ contactForm.addEventListener('submit', function(e) {
     
     // Basic validation
     if (!name || !email || !service || !message) {
+        e.preventDefault();
         showNotification('Per favore, compila tutti i campi obbligatori.', 'error');
         return;
     }
@@ -63,18 +62,42 @@ contactForm.addEventListener('submit', function(e) {
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+        e.preventDefault();
         showNotification('Per favore, inserisci un indirizzo email valido.', 'error');
         return;
     }
     
-    // Simulate form submission
+    // Set the redirect URL after successful submission
+    const currentUrl = window.location.href;
+    const redirectUrl = currentUrl.split('#')[0] + '?success=true#contact';
+    const nextInput = this.querySelector('input[name="_next"]');
+    if (nextInput) {
+        nextInput.value = redirectUrl;
+    }
+    
+    // Show loading notification
     showNotification('Invio in corso...', 'info');
     
-    // Simulate API call
-    setTimeout(() => {
-        showNotification('Richiesta inviata con successo! Ti contatteremo presto.', 'success');
-        contactForm.reset();
-    }, 2000);
+    // Disable submit button to prevent double submission
+    const submitBtn = this.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Invio...';
+    }
+    
+    // Form will submit normally to FormSubmit
+    // If there's an error, FormSubmit will handle it
+    // If successful, user will be redirected to the success URL
+});
+
+// Check for success parameter in URL
+window.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+        showNotification('Richiesta inviata con successo! Ti contatteremo presto via email.', 'success');
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+    }
 });
 
 // Notification system
