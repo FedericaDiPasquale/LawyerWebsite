@@ -43,7 +43,9 @@ window.addEventListener('scroll', () => {
 // Contact Form Handling
 const contactForm = document.getElementById('contactForm');
 
-contactForm.addEventListener('submit', function(e) {
+contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault(); // Prevent default form submission
+    
     // Get form data
     const formData = new FormData(this);
     const name = formData.get('name');
@@ -54,7 +56,6 @@ contactForm.addEventListener('submit', function(e) {
     
     // Basic validation
     if (!name || !email || !service || !message) {
-        e.preventDefault();
         showNotification('Per favore, compila tutti i campi obbligatori.', 'error');
         return;
     }
@@ -62,17 +63,8 @@ contactForm.addEventListener('submit', function(e) {
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        e.preventDefault();
         showNotification('Per favore, inserisci un indirizzo email valido.', 'error');
         return;
-    }
-    
-    // Set the redirect URL after successful submission
-    const currentUrl = window.location.href;
-    const redirectUrl = currentUrl.split('#')[0] + '?success=true#contact';
-    const nextInput = this.querySelector('input[name="_next"]');
-    if (nextInput) {
-        nextInput.value = redirectUrl;
     }
     
     // Set reply-to email for Formspree
@@ -81,28 +73,70 @@ contactForm.addEventListener('submit', function(e) {
         replyToInput.value = email;
     }
     
+    // Remove _next field since we're not redirecting
+    const nextInput = this.querySelector('input[name="_next"]');
+    if (nextInput) {
+        nextInput.remove();
+    }
+    
     // Show loading notification
     showNotification('Invio in corso...', 'info');
     
     // Disable submit button to prevent double submission
     const submitBtn = this.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn ? submitBtn.textContent : 'Invia Richiesta';
     if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.textContent = 'Invio...';
     }
     
-    // Form will submit normally to Formspree
-    // If there's an error, Formspree will handle it
-    // If successful, user will be redirected to the success URL
-});
-
-// Check for success parameter in URL
-window.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('success') === 'true') {
-        showNotification('Richiesta inviata con successo! Ti contatteremo presto via email.', 'success');
-        // Clean up URL
-        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+    try {
+        // Submit form to Formspree via fetch
+        const response = await fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            // Success - show success message
+            showNotification('Richiesta inviata con successo! Ti contatteremo presto via email.', 'success');
+            
+            // Reset form
+            this.reset();
+            
+            // Re-enable submit button
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            }
+        } else {
+            // Error from Formspree
+            const data = await response.json();
+            if (data.errors) {
+                showNotification('Si è verificato un errore. Per favore, riprova più tardi.', 'error');
+            } else {
+                showNotification('Errore nell\'invio del messaggio. Per favore, riprova.', 'error');
+            }
+            
+            // Re-enable submit button
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            }
+        }
+    } catch (error) {
+        // Network error or other issues
+        console.error('Form submission error:', error);
+        showNotification('Errore di connessione. Per favore, verifica la tua connessione e riprova.', 'error');
+        
+        // Re-enable submit button
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+        }
     }
 });
 
