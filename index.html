@@ -34,6 +34,17 @@
     <meta name="twitter:description" content="Avvocato a Pisa specializzato in diritto civile, penale, del lavoro e responsabilità amministrativa (D.Lgs. 231/2001). Consulenza legale professionale.">
     <meta name="twitter:image" content="https://www.studiolegalebrillante.it/images/foto.jpeg">
     
+    <!-- Resource Hints for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    
     <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -161,14 +172,25 @@
         "@type": "Person",
         "name": "Laura Brillante",
         "jobTitle": "Avvocato",
+        "email": "laurabrill@live.it",
+        "telephone": "+39 329 486 9908",
+        "sameAs": [
+          "https://www.linkedin.com/in/laura-brillante-16aab419a/"
+        ],
         "alumniOf": {
           "@type": "EducationalOrganization",
           "name": "Università di Pisa"
         },
-        "memberOf": {
-          "@type": "Organization",
-          "name": "Ordine degli Avvocati di Pisa"
-        }
+        "memberOf": [
+          {
+            "@type": "Organization",
+            "name": "Ordine degli Avvocati di Pisa"
+          },
+          {
+            "@type": "Organization",
+            "name": "Camere Penali di Pisa"
+          }
+        ]
       }
     }
     </script>
@@ -310,7 +332,7 @@
             </div>
             <div class="hero-image">
                 <div class="professional-photo">
-                    <img src="images/foto.jpeg" alt="Avv. Laura Brillante - Avvocato a Pisa" class="hero-photo">
+                    <img src="images/foto.jpeg" alt="Avv. Laura Brillante - Avvocato a Pisa" class="hero-photo" loading="lazy" width="400" height="500">
                 </div>
             </div>
         </div>
