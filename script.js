@@ -41,10 +41,18 @@ window.addEventListener('scroll', () => {
 });
 
 // Contact Form Handling
-const contactForm = document.getElementById('contactForm');
-
-contactForm.addEventListener('submit', async function(e) {
-    e.preventDefault(); // Prevent default form submission
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contactForm');
+    
+    if (!contactForm) {
+        console.error('Contact form not found');
+        return;
+    }
+    
+    contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault(); // Prevent default form submission
+        e.stopPropagation(); // Stop event bubbling
+        e.stopImmediatePropagation(); // Stop other handlers
     
     // Get form data
     const formData = new FormData(this);
@@ -138,6 +146,9 @@ contactForm.addEventListener('submit', async function(e) {
             submitBtn.textContent = originalBtnText;
         }
     }
+    
+    return false; // Additional safeguard
+    });
 });
 
 // Notification system
